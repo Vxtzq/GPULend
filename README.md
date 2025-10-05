@@ -1,5 +1,9 @@
 # GPULend 🚀
 
+**Free computation for all** – GPULend allows you to seamlessly offload GPU-intensive tasks to available resources in a simple, secure way.  
+Whether you are training ML models, rendering, or crunching large datasets, GPULend simplifies distributed GPU usage.  
+Rent your own low-VRAM GPU to access high-VRAM GPUs elsewhere and maximize computation power.
+
 <div style="display: flex; gap: 10px; justify-content: center; align-items: flex-start;">
   <img src="https://github.com/user-attachments/assets/f6740670-25af-4d6b-b901-50e6b0f8685a" 
        alt="Screenshot 1" width="250">
@@ -9,11 +13,9 @@
 
 ---
 ## 🌟 Overview
-
-**Free computation for all** – GPULend allows you to seamlessly offload GPU-intensive tasks to available resources in a simple, secure way.  
-Whether you are training ML models, rendering, or crunching large datasets, GPULend simplifies distributed GPU usage.  
-Rent your own low-VRAM GPU to access high-VRAM GPUs elsewhere and maximize computation power.
-
+- Rent gpu
+- Share gpu
+- Manage jobs & credits
 ---
 
 
