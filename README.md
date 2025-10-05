@@ -80,9 +80,8 @@ python app.py
 
 ## 📝 TODO / Customization
 
-```
 - Add more screenshots or GIF demos.
 - Include configuration or settings section.
 - Add badges for GitHub releases, license, CI/CD.
 - Update macOS support instructions.
-```
+
