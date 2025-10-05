@@ -1,0 +1,4 @@
+httpx
+psutil
+GPUtil
+PyQt6
