@@ -35,7 +35,7 @@ Whether you are training ML models, rendering, or crunching large datasets, GPUL
 
 ```bat
 install_and_run.bat
-
+```
 Linux
 
     Download the AppImage file.
