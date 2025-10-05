@@ -116,6 +116,8 @@ def _get_podman_network_args() -> list[str]:
     # Fallback to bridge
     return ["--network", "bridge"]
 
+
+
 async def run_job_in_podman(
     job_folder: str,
     cmd: str,
@@ -129,9 +131,20 @@ async def run_job_in_podman(
     gpu: Optional[str] = None,
     container_name: Optional[str] = None
 ) -> Dict[str, Any]:
+    """
+    Copy job_folder into a writable 'workspace' and run `cmd` with /workspace mounted rw inside the container.
+    No virtualenvs are created. If `requirements` is provided it will be installed inside the container with
+    `python -m pip install -r /workspace/<req>` (ephemeral, inside container).
+    Returns a zip of the workspace (only workspace content).
+    """
     podman_path = find_podman()
     if not podman_path:
         return {"ok": False, "error": "podman not found on PATH"}
+
+    # Ensure podman machine running where applicable
+    machine_err = await _ensure_podman_machine_running(podman_path)
+    if machine_err is not None:
+        return {"ok": False, "error": f"podman machine problem: {machine_err}"}
 
     _default_tmp_base = os.environ.get("PODRUN_WORKDIR", "/var/tmp")
     if not os.path.isdir(_default_tmp_base):
@@ -139,24 +152,14 @@ async def run_job_in_podman(
 
     tmp_root = tempfile.mkdtemp(prefix="podrun_", dir=_default_tmp_base)
     workspace = os.path.join(tmp_root, "workspace")
-    output = os.path.join(tmp_root, "output")
     os.makedirs(workspace, exist_ok=True)
-    os.makedirs(output, exist_ok=True)
 
-    # make output world-writable so container non-root user can write logs
-    try:
-        os.chmod(output, 0o777)
-    except Exception:
-        # best-effort; continue even if chmod fails
-        pass
-
-    # copy requirements file (if provided) into workspace host copy
+    # copy requirements file name if provided (we also accept full path)
     if requirements:
         req_name = os.path.basename(requirements)
         try:
             shutil.copy2(requirements, os.path.join(workspace, req_name))
-        except Exception as e:
-            # if requirements path was invalid => proceed without it (caller can detect)
+        except Exception:
             req_name = None
     else:
         req_name = None
@@ -164,19 +167,38 @@ async def run_job_in_podman(
     if container_name is None:
         container_name = "gpulend-" + uuid.uuid4().hex[:12]
 
-    mount_suffix = ",Z" if sys.platform.startswith("linux") else ""
-
     try:
         src = Path(job_folder)
         if not src.exists():
             return {"ok": False, "error": f"job_folder not found: {job_folder}", "container_name": container_name}
 
-        # create a lightweight host copy (read-only mount in container)
+        # COPY job_folder into workspace (host copy) so original is not touched
         if src.is_dir():
             shutil.copytree(src, workspace, dirs_exist_ok=True)
         else:
             shutil.copy2(src, os.path.join(workspace, src.name))
 
+        # Best-effort: make workspace and its contents writeable so container can modify them.
+        try:
+            for root, dirs, files in os.walk(workspace):
+                try:
+                    os.chmod(root, 0o777)
+                except Exception:
+                    pass
+                for d in dirs:
+                    try:
+                        os.chmod(os.path.join(root, d), 0o777)
+                    except Exception:
+                        pass
+                for f in files:
+                    try:
+                        os.chmod(os.path.join(root, f), 0o666)
+                    except Exception:
+                        pass
+        except Exception:
+            pass  # best-effort
+
+        # resource flags
         resource_flags = []
         if cpu_cores:
             resource_flags += ["--cpus", str(cpu_cores)]
@@ -187,97 +209,64 @@ async def run_job_in_podman(
 
         network_flags = _get_podman_network_args()
 
-        workspace_tmpfs_size = os.environ.get("PODRUN_TMPFS_WORKSPACE_SIZE", "15g")
-        tmp_tmpfs_size = os.environ.get("PODRUN_TMPFS_TMP_SIZE", "15g")
+        # Mount options: add SELinux label on Linux
+        is_linux = sys.platform.startswith("linux")
+        workspace_opts = "rw,Z" if is_linux else "rw"
 
-        # Build container-side script:
-        # - copy host read-only /workspace-src into writable tmpfs /workspace (no preserved ownership)
-        # - create venv in /workspace and install pip/setuptools/wheel
-        # - optionally install requirements
-        # - run the command, writing logs to /output which is host-mounted writable
-        install_and_run_script_parts = [
-            "set -euo pipefail",
-            # copy source into writable tmpfs; use simple recursive copy (avoid preserving ownership)
-            "rm -rf /workspace || true",
-            "mkdir -p /workspace",
-            "cp -r /workspace-src/. /workspace || true",
-            "cd /workspace || exit 1",
-            "rm -rf .venv || true",
-            "python -m venv .venv",
-            "./.venv/bin/python -m pip install --upgrade pip setuptools wheel --no-cache-dir --disable-pip-version-check",
-        ]
+        # Build inner command:
+        # - fail fast
+        # - cd into /workspace
+        # - if requirements exist, run pip install inside the container (no venv)
+        # - run user's cmd and capture stdout/stderr into /workspace/*.log
+        inner_parts = ["set -euo pipefail", "cd /workspace || exit 1"]
 
         if req_name:
-            # ensure TMPDIR points to tmpfs /tmp during installs
-            install_and_run_script_parts.append("export TMPDIR=/tmp")
-            install_and_run_script_parts.append(
-                f"./.venv/bin/python -m pip install --no-cache-dir --disable-pip-version-check -r /workspace/{req_name}"
-            )
+            # install requirements inside container (ephemeral)
+            inner_parts.append(f"python -m pip install --upgrade pip setuptools wheel --no-cache-dir --disable-pip-version-check || true")
+            inner_parts.append(f"python -m pip install --no-cache-dir -r /workspace/{req_name}")
 
-        # run the user command, logs to /output which is a writable host mount
-        safe_cmd = (
-            "PATH=/workspace/.venv/bin:$PATH HOME=/tmp sh -c "
-            f"'{cmd}' > /output/stdout.log 2> /output/stderr.log"
-        )
-        install_and_run_script_parts.append(safe_cmd)
+        # run the user command and capture logs inside workspace
+        inner_parts.append(f"HOME=/tmp sh -c '{cmd}' > /workspace/stdout.log 2> /workspace/stderr.log")
 
-        installer_cmd = "; ".join(install_and_run_script_parts)
+        inner_cmd = "; ".join(inner_parts)
 
         run_container_cmd = [
             podman_path, "run", "--rm",
-            # keep container rootfs read-only for safety, but give writable tmpfs and explicit writable output mount
-            #"--read-only",
-            "--tmpfs", f"/workspace:rw,size={workspace_tmpfs_size}",
-            "--tmpfs", f"/tmp:rw,size={tmp_tmpfs_size}",
             "--security-opt", "no-new-privileges",
             "--pids-limit", "128",
             "--cap-drop", "ALL",
             *network_flags,
-            # run as nobody/nogroup inside the container (less privileges)
-            "--user", "65534:65534",
             "--name", container_name,
-            # host workspace copy mounted read-only (container copies it into tmpfs)
-            "-v", f"{os.path.abspath(workspace)}:/workspace-src:ro{mount_suffix}",
-            # host output mounted writable so container can write logs/results
-            "-v", f"{os.path.abspath(output)}:/output:rw{mount_suffix}",
+            "-v", f"{os.path.abspath(workspace)}:/workspace:{workspace_opts}",
             *resource_flags,
             image,
-            "sh", "-c", installer_cmd
+            "sh", "-c", inner_cmd
         ]
 
-        # run container and capture output
         rc, stdout_b, stderr_b = await _run_subproc(run_container_cmd, timeout=timeout)
-        stdout = stdout_b.decode("utf-8", errors="replace")
-        stderr = stderr_b.decode("utf-8", errors="replace")
+        pod_stdout = stdout_b.decode("utf-8", errors="replace")
+        pod_stderr = stderr_b.decode("utf-8", errors="replace")
 
-        # read logs from output dir if present
+        # After run: collect stdout/stderr from workspace if present, else fall back to podman output
         out_files = {}
-        for log_name in ("stdout.log", "stderr.log"):
-            log_path = os.path.join(output, log_name)
-            if os.path.exists(log_path):
+        for name in ("stdout.log", "stderr.log"):
+            pth = os.path.join(workspace, name)
+            if os.path.exists(pth):
                 try:
-                    with open(log_path, "r", encoding="utf-8", errors="replace") as f:
-                        out_files[log_name] = f.read()
+                    with open(pth, "r", encoding="utf-8", errors="replace") as f:
+                        out_files[name] = f.read()
                 except Exception as e:
-                    out_files[log_name] = f"(read error: {e})"
+                    out_files[name] = f"(read error: {e})"
             else:
-                # fallback to captured podman stdout/stderr
-                out_files[log_name] = stdout if log_name == "stdout.log" else stderr
+                out_files[name] = pod_stdout if name == "stdout.log" else pod_stderr
 
-        # zip the host workspace copy (not the tmpfs venv) to return user code & small artifacts
+        # Zip only the workspace contents to return artifacts
         zip_path = os.path.join(tmp_root, "workspace.zip")
         with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zipf:
-            # include workspace (user code)
             for root, dirs, files in os.walk(workspace):
                 for file in files:
                     abs_path = os.path.join(root, file)
                     rel_path = os.path.relpath(abs_path, workspace)
-                    zipf.write(abs_path, rel_path)
-            # include /output (job output/logs)
-            for root, dirs, files in os.walk(output):
-                for file in files:
-                    abs_path = os.path.join(root, file)
-                    rel_path = os.path.relpath(abs_path, tmp_root)  # keep relative path
                     zipf.write(abs_path, rel_path)
 
         return {
@@ -288,10 +277,10 @@ async def run_job_in_podman(
                 "stderr": _truncate(out_files.get("stderr.log", "")),
                 "out_files": {k: (_truncate(v) if isinstance(v, str) else str(v)) for k, v in out_files.items()}
             },
-            "podman_cmd_stdout": _truncate(stdout),
-            "podman_cmd_stderr": _truncate(stderr),
+            "podman_cmd_stdout": _truncate(pod_stdout),
+            "podman_cmd_stderr": _truncate(pod_stderr),
             "workspace_zip": zip_path,
-            "workspace": tmp_root if keep_dirs else None,
+            "workspace": workspace if keep_dirs else None,
             "container_name": container_name
         }
 
