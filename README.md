@@ -59,23 +59,22 @@ python app.py
 ```
 ## 💻 Supported Platforms
 
-
-Platform             Notes
--------------------  ---------------------------------------
-Windows 10/11        Standalone `.exe` or batch installer
-Linux (Ubuntu/Fedora) AppImage or Python source
-macOS                [TODO: Add macOS support]
-
+| Platform             | Notes                                    |
+|--------------------|------------------------------------------|
+| Windows 10/11        | Standalone `.exe` or batch installer   |
+| Linux (Ubuntu/Fedora)| AppImage or Python source              |
+| macOS                | [TODO: Add macOS support]              |
 
 ---
 
 ## ⚡ Quick Start
 
-```
-1. Launch GPULend.
-2. Ensure Podman is installed and detected.
-3. Offload computation tasks to available GPUs effortlessly.
-```
+    Launch GPULend.
+
+    Ensure Podman is installed and detected.
+
+    Offload computation tasks to available GPUs effortlessly.
+
 
 ---
 
