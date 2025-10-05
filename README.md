@@ -59,13 +59,13 @@ python app.py
 ```
 ## 💻 Supported Platforms
 
-```
+
 Platform             Notes
 -------------------  ---------------------------------------
 Windows 10/11        Standalone `.exe` or batch installer
 Linux (Ubuntu/Fedora) AppImage or Python source
 macOS                [TODO: Add macOS support]
-```
+
 
 ---
 
