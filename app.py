@@ -41,10 +41,10 @@ SETTINGS_FILE = "settings.json"
 # Configuration
 # ---------------------------
 #SERVER_HOST = "127.0.0.1"
-SERVER_HOST = "127.0.0.1"
-SERVER_PORT = 8000
-SERVER_BASE = f"http://{SERVER_HOST}:{SERVER_PORT}"
-
+#SERVER_HOST = "127.0.0.1"
+#SERVER_PORT = 8000
+#SERVER_BASE = f"http://{SERVER_HOST}:{SERVER_PORT}"
+SERVER_BASE = "https://gpulend-fb7098f2.koyeb.app"
 
 
 def prepare_job(job_path: str) -> str:
@@ -2712,3 +2712,4 @@ if __name__ == "__main__":
     window = MainWindow()
     window.show()
     sys.exit(app.exec())
+
