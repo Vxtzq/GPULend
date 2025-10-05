@@ -45,10 +45,10 @@ chmod +x GPULend.AppImage
 Optional: Run from Python
 
 If you prefer running from source:
-
+```python
 python -m pip install -r requirements.txt
 python app.py
-
+```
 💻 Supported Platforms
 Platform	Notes
 Windows 10/11	Standalone .exe or batch installer
