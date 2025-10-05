@@ -273,12 +273,12 @@ async def run_job_in_podman(
                     abs_path = os.path.join(root, file)
                     rel_path = os.path.relpath(abs_path, workspace)
                     zipf.write(abs_path, rel_path)
-    # include /output (job output/logs)
-    for root, dirs, files in os.walk(output):
-        for file in files:
-            abs_path = os.path.join(root, file)
-            rel_path = os.path.relpath(abs_path, tmp_root)  # keep relative path
-            zipf.write(abs_path, rel_path)
+            # include /output (job output/logs)
+            for root, dirs, files in os.walk(output):
+                for file in files:
+                    abs_path = os.path.join(root, file)
+                    rel_path = os.path.relpath(abs_path, tmp_root)  # keep relative path
+                    zipf.write(abs_path, rel_path)
 
         return {
             "ok": True,
