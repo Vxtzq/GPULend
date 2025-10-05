@@ -16,8 +16,6 @@ Rent your own low-VRAM GPU to access high-VRAM GPUs elsewhere and maximize compu
 - Rent gpu
 - Share gpu
 - Manage jobs & credits
----
-
 
 
 ---
