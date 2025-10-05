@@ -1,8 +1,12 @@
 # GPULend 🚀
 
-| Screenshots | Overview |
-|------------|----------|
-| <img src="https://github.com/user-attachments/assets/f6740670-25af-4d6b-b901-50e6b0f8685a" width="200"><br><img src="https://github.com/user-attachments/assets/cd48c461-b910-4c32-a4ec-35b84c470f97" width="200"> | **Free computation for all** – GPULend allows you to seamlessly offload GPU-intensive tasks to available resources in a simple, secure way.<br><br>Whether you are training ML models, rendering, or crunching large datasets, GPULend simplifies distributed GPU usage.<br><br>Rent your own low-VRAM GPU to access high-VRAM GPUs elsewhere and maximize computation power.<br><br>**⚡ Features:**<br>- P2P GPU Sharing – Connect your GPU to the network or rent access to high-VRAM GPUs.<br>- Distributed Computation – Offload tasks safely across multiple GPUs.<br>- Cross-Platform – Runs on Windows and Linux (macOS support coming soon).<br>- Easy Setup – Launch via standalone executable, AppImage, or Python source.<br>- Podman Integration – Containers ensure isolated, reproducible environments. |
+## 🌟 Overview
+**Free computation for all** – GPULend allows you to seamlessly offload GPU-intensive tasks to available resources.
+
+![Screenshot 1](https://github.com/user-attachments/assets/f6740670-25af-4d6b-b901-50e6b0f8685a)
+![Screenshot 2](https://github.com/user-attachments/assets/cd48c461-b910-4c32-a4ec-35b84c470f97)
+
+Rent your low-VRAM GPU to access high-VRAM GPUs elsewhere.
 
 
 ---
