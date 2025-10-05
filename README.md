@@ -33,10 +33,18 @@ Whether you are training ML models, rendering, or crunching large datasets, GPUL
 1. Download the standalone `.exe` file.  
 2. Or run the installer batch file:  
 
+```
+git clone https://github.com/Vxtzq/GPULend
+```
+
 ```bat
 install_and_run.bat
 ```
-Linux
+### Linux
+```
+git clone https://github.com/Vxtzq/GPULend
+```
+
 ```
 chmod +x GPULend.AppImage
 ./GPULend.AppImage
