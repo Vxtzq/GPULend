@@ -267,11 +267,18 @@ async def run_job_in_podman(
         # zip the host workspace copy (not the tmpfs venv) to return user code & small artifacts
         zip_path = os.path.join(tmp_root, "workspace.zip")
         with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zipf:
+            # include workspace (user code)
             for root, dirs, files in os.walk(workspace):
                 for file in files:
                     abs_path = os.path.join(root, file)
                     rel_path = os.path.relpath(abs_path, workspace)
                     zipf.write(abs_path, rel_path)
+    # include /output (job output/logs)
+    for root, dirs, files in os.walk(output):
+        for file in files:
+            abs_path = os.path.join(root, file)
+            rel_path = os.path.relpath(abs_path, tmp_root)  # keep relative path
+            zipf.write(abs_path, rel_path)
 
         return {
             "ok": True,
