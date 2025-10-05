@@ -69,11 +69,11 @@ python app.py
 
 ## ⚡ Quick Start
 
-    Launch GPULend.
+- Launch GPULend.
 
-    Ensure Podman is installed and detected.
+- Ensure Podman is installed and detected.
 
-    Offload computation tasks to available GPUs effortlessly.
+- Offload computation tasks to available GPUs effortlessly.
 
 
 ---
