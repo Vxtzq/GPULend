@@ -21,7 +21,7 @@
     .btn { display: inline-block; margin-top: 20px; padding: 12px 25px; background: #fff; color: #3498db; border-radius: 5px; font-weight: bold; transition: 0.3s; }
     .btn:hover { background: #ecf0f1; }
 
-    /* Features & Overview */
+    /* Overview & Features */
     .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 30px; }
     .card { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: transform 0.2s; }
     .card:hover { transform: translateY(-5px); }
@@ -55,13 +55,13 @@
   <!-- Features -->
   <section>
     <h2>✨ Features</h2>
-    <ul>
-      <li>Lightweight and portable GUI</li>
-      <li>Automatic GPU detection and management</li>
-      <li>Cross-platform support (Windows & Linux)</li>
-      <li>Secure execution with Podman containers</li>
-      <li>Easy installation: standalone executable or AppImage</li>
-    </ul>
+    <div class="cards">
+      <div class="card"><strong>Lightweight GUI</strong><p>Portable, fast, and easy to use interface.</p></div>
+      <div class="card"><strong>Automatic GPU Detection</strong><p>Detects available GPUs and manages resources automatically.</p></div>
+      <div class="card"><strong>Cross-Platform</strong><p>Works on Windows and Linux systems.</p></div>
+      <div class="card"><strong>Secure Execution</strong><p>Runs tasks in Podman containers to ensure safety.</p></div>
+      <div class="card"><strong>Easy Installation</strong><p>Standalone executable or AppImage – no complex setup required.</p></div>
+    </div>
   </section>
 
   <!-- Installation -->
