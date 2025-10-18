@@ -4,195 +4,118 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>GPULend – GPU Sharing App</title>
-
   <style>
-    /* ===== Reset & base ===== */
     :root{
       --primary:#3498db;
-      --primary-dark:#217dbb;
-      --muted:#f4f6f8;
-      --card-bg:#ffffff;
-      --glass: rgba(255,255,255,0.6);
-      --shadow: 0 10px 30px rgba(30,40,50,0.08);
+      --primary-2:#217dbb;
+      --bg:#f4f6f8;
+      --card:#ffffff;
+      --muted:#556b78;
+      --shadow: 0 18px 40px rgba(18,40,65,0.06);
+      --radius:16px;
     }
     *{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%}
     body{
       font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      background: linear-gradient(180deg,#f7f9fb 0%, #eef3f7 100%);
-      color:#25323a;
+      background: linear-gradient(180deg,#f7f9fb,#eef3f7);
+      color:#21313a;
+      line-height:1.5;
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
-      line-height:1.5;
     }
-    a{color:var(--primary);text-decoration:none}
-    a:hover{text-decoration:underline}
 
-    /* ===== Layout helpers ===== */
-    .container{max-width:1100px;margin:0 auto;padding:36px 20px}
+    /* layout */
+    .container{max-width:1200px;margin:0 auto;padding:36px 20px}
+    header{background:linear-gradient(90deg,var(--primary),#4aa0e6);color:#fff;padding:56px 20px;border-radius:12px;box-shadow:var(--shadow);text-align:center}
+    header h1{font-size:2.4rem}
+    header p{opacity:.95;margin-top:8px;font-size:1.05rem}
+    .btn{display:inline-block;padding:12px 26px;border-radius:12px;background:#fff;color:var(--primary);font-weight:700;margin-top:14px;text-decoration:none}
+    .btn:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(21,80,140,0.08)}
+
     section{margin:40px 0}
-    h1,h2{color:#173043}
-    h1{font-size:2.6rem}
-    h2{font-size:1.35rem;margin-bottom:12px}
-    p{margin-bottom:12px}
 
-    /* ===== Header ===== */
-    header{
-      background: linear-gradient(90deg,var(--primary) 0%, #4aa0e6 100%);
-      color:white;
-      padding:48px 20px;
-      text-align:center;
-      border-bottom-left-radius:14px;
-      border-bottom-right-radius:14px;
-      box-shadow: var(--shadow);
-    }
-    header p{opacity:.95;font-size:1.05rem;margin-top:8px}
-    .header-cta{margin-top:18px}
-    .btn{
-      display:inline-block;padding:12px 26px;border-radius:10px;background:rgba(255,255,255,0.95);
-      color:var(--primary);font-weight:700;box-shadow:0 6px 18px rgba(21,80,140,0.08);
-      transition:transform .18s ease, box-shadow .18s ease;
-    }
-    .btn:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(21,80,140,0.12)}
-    .small{font-size:.95rem}
-
-    /* ===== Advertising panel (top) ===== */
+    /* AD PANEL - larger and airy */
     .ad-panel{
-      background: linear-gradient(180deg,#eef9ff 0%, #f7fbff 100%);
-      border-radius:14px;
-      padding:26px;
-      box-shadow:var(--shadow);
-      display:flex;
-      gap:20px;
-      align-items:center;
-      overflow:hidden;
+      display:flex;gap:22px;align-items:center;padding:28px;border-radius:18px;background:linear-gradient(180deg,#f2fbff,#eef9ff);box-shadow:var(--shadow);
     }
-    .ad-left{flex:1;min-width:240px}
-    .ad-right{flex:1.3;min-width:280px}
-    .ad-left h3{font-size:1.15rem;margin-bottom:6px}
-    .ad-left p{color:#2f4858}
-    /* carousel / strip */
-    .carousel{
-      display:flex;gap:14px;align-items:center;overflow:hidden;padding:6px 0;
-    }
-    .carousel-track{display:flex;gap:18px;align-items:center;transition:transform 600ms ease}
+    .ad-left{flex:1;min-width:260px}
+    .ad-right{flex:1.6;min-width:340px}
+    .ad-left h3{font-size:1.15rem;margin-bottom:8px}
+    .ad-left p{color:var(--muted);margin-bottom:12px}
+    .ad-badge{display:inline-block;background:var(--primary);color:#fff;padding:6px 10px;border-radius:999px;font-weight:800;margin-right:8px}
+
+    /* carousel strip - bigger thumbs, not cropped */
+    .carousel{display:flex;overflow:hidden;align-items:center}
+    .carousel-track{display:flex;gap:18px;transition:transform 600ms linear}
     .ad-thumb{
-      width:180px;height:120px;border-radius:10px;flex:0 0 auto;
-      overflow:hidden;position:relative;cursor:pointer;
-      box-shadow:0 10px 30px rgba(18,40,65,0.08);
-      transform-origin:center;transition:transform .25s ease;
+      width:320px; aspect-ratio:16/9; flex:0 0 auto; border-radius:12px; background:linear-gradient(180deg,#fff,#f7fbff); box-shadow:0 14px 36px rgba(12,30,45,0.06); display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;
     }
-    .ad-thumb img{width:100%;height:100%;object-fit:cover;display:block}
-    .ad-thumb:hover{transform:translateY(-6px) scale(1.03)}
-    .ad-badge{display:inline-block;background:var(--primary);color:white;padding:6px 10px;border-radius:999px;font-weight:700;margin-right:8px}
+    .ad-thumb img{width:100%;height:100%;object-fit:contain;background:#f8fbff;display:block}
 
-    /* ===== Download box (kept spirit, upgraded) ===== */
-    .download-box{
-      background:var(--card-bg);padding:26px;border-radius:14px;box-shadow:var(--shadow);
-      text-align:center;max-width:680px;margin:28px auto;
-    }
-    .download-title{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:8px}
-    .download-cta{
-      display:inline-block;padding:14px 32px;border-radius:14px;
-      font-weight:800;color:white;background:linear-gradient(90deg,var(--primary),var(--primary-dark));
-      position:relative;overflow:visible;box-shadow:0 12px 30px rgba(52,152,219,0.18);
-      transition:transform .18s ease, box-shadow .18s ease;
-      text-decoration:none;
-    }
-    .download-cta:hover{transform:translateY(-4px);box-shadow:0 18px 50px rgba(33,125,187,0.2)}
-    /* pulsing ring */
-    .download-cta::after{
-      content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:120%;height:120%;
-      border-radius:18px;background:transparent;border:2px solid rgba(52,152,219,0.12);pointer-events:none;
-      animation: pulse 2200ms infinite;
-    }
-    @keyframes pulse{
-      0%{transform:translate(-50%,-50%) scale(.96);opacity:.9}
-      70%{transform:translate(-50%,-50%) scale(1.14);opacity:0}
-      100%{opacity:0}
-    }
-    .download-meta{margin-top:10px;color:#556b78;font-size:.95rem}
+    /* download box - larger CTA preserved */
+    .download-box{background:var(--card);padding:36px;border-radius:18px;text-align:center;box-shadow:var(--shadow);max-width:760px;margin:36px auto}
+    .download-cta{display:inline-block;padding:16px 36px;border-radius:14px;font-weight:800;color:#fff;background:linear-gradient(90deg,var(--primary),var(--primary-2));text-decoration:none;box-shadow:0 16px 40px rgba(52,152,219,0.15)}
+    .download-cta:hover{transform:translateY(-4px)}
+    .download-meta{margin-top:12px;color:var(--muted);font-size:.95rem}
 
-    /* ===== Cards (Overview/Features) ===== */
-    .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
-    .card{
-      background:var(--card-bg);padding:18px;border-radius:12px;text-align:left;box-shadow:0 10px 30px rgba(12,30,45,0.04);
-      transition:transform .18s ease, box-shadow .18s ease;
-    }
-    .card:hover{transform:translateY(-6px);box-shadow:0 22px 46px rgba(10,30,50,0.06)}
-    .card .title{display:flex;gap:10px;align-items:center;font-weight:700;margin-bottom:8px}
-    .card .title .icon{background:linear-gradient(90deg,var(--primary),#66b3e8);color:white;width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.15rem}
+    /* cards (overview/features) - bigger, left-aligned */
+    .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+    .card{background:var(--card);padding:22px;border-radius:14px;box-shadow:0 14px 36px rgba(12,30,45,0.04);text-align:left;transition:transform .18s}
+    .card:hover{transform:translateY(-6px)}
+    .card .title{display:flex;align-items:center;gap:12px;margin-bottom:8px;font-weight:700}
+    .card .icon{width:44px;height:44px;border-radius:10px;background:linear-gradient(90deg,var(--primary),#66b3e8);display:flex;align-items:center;justify-content:center;color:white;font-size:1.15rem}
 
-    /* ===== Boxes (install/quickstart) ===== */
-    .box{background:linear-gradient(180deg, #ffffff, #fbfdff); padding:20px;border-radius:12px;box-shadow:0 10px 26px rgba(10,30,50,0.04)}
-    pre{background:#0f1720;color:#e6eef6;padding:14px;border-radius:10px;overflow:auto;font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, "Fira Code",monospace}
-    code{background:#eef3f7;padding:2px 6px;border-radius:6px;color:#173043;font-family:ui-monospace, monospace}
+    /* boxes (install/quickstart) - larger */
+    .box{background:linear-gradient(180deg,#ffffff,#fbfeff);padding:22px;border-radius:14px;box-shadow:0 14px 36px rgba(12,30,45,0.04)}
+    pre{background:#0b1220;color:#e6eef6;padding:16px;border-radius:10px;overflow:auto;font-family:ui-monospace, "Fira Code",monospace;font-size:0.96rem}
+    code{background:#eef6fb;padding:3px 7px;border-radius:8px;color:#08334a;font-family:ui-monospace,monospace}
 
-    /* ===== Screenshots gallery (below) ===== */
-    .gallery{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
-    .gallery .shot{
-      width:320px;height:200px;border-radius:12px;overflow:hidden;position:relative;cursor:pointer;
-      box-shadow:0 18px 40px rgba(8,24,48,0.06);transition:transform .22s ease, box-shadow .22s ease;
-      background:linear-gradient(180deg,#f8fbff,#ffffff);
+    /* gallery (below) - full aspect ratio containers, no cropping */
+    .gallery{display:flex;flex-wrap:wrap;gap:18px;justify-content:center;margin-top:12px}
+    .shot{
+      width:420px; aspect-ratio:16/9; border-radius:14px; overflow:hidden; position:relative; background:linear-gradient(180deg,#f8fbff,#ffffff); box-shadow:0 18px 48px rgba(8,24,48,0.07); cursor:pointer; display:flex;align-items:center;justify-content:center;
     }
-    .gallery .shot img{width:100%;height:100%;object-fit:cover;display:block}
-    .gallery .shot:hover{transform:translateY(-8px);box-shadow:0 30px 60px rgba(8,24,48,0.14)}
-    .shot-caption{
-      position:absolute;left:12px;bottom:12px;padding:6px 10px;border-radius:8px;background:rgba(8,16,28,0.6);color:white;font-weight:600;font-size:0.92rem
+    .shot img{width:100%;height:100%;object-fit:contain;display:block}
+    .shot-caption{position:absolute;left:14px;bottom:12px;padding:6px 10px;border-radius:8px;background:rgba(9,18,28,0.6);color:white;font-weight:700;font-size:.96rem}
+
+    /* responsive tweaks */
+    @media (max-width:1100px){
+      .ad-panel{flex-direction:column;align-items:stretch}
+      .ad-right{order:2}
+      .ad-thumb{width:260px}
+      .shot{width:48%}
+    }
+    @media (max-width:640px){
+      .shot{width:100%}
+      .ad-thumb{width:180px}
+      header h1{font-size:1.6rem}
+      .download-box{padding:20px}
     }
 
-    /* ===== Lightbox modal ===== */
-    .lightbox{position:fixed;inset:0;background:rgba(6,10,18,0.75);display:none;align-items:center;justify-content:center;z-index:1200;padding:20px}
-    .lightbox.open{display:flex}
-    .lightbox-content{max-width:1100px;width:100%;display:flex;gap:18px;align-items:center}
-    .lightbox-img{flex:1;background:#0b1220;border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center}
-    .lightbox-img img{max-width:100%;max-height:80vh;display:block}
-    .lightbox-side{width:320px;color:#e6eef6}
-    .lightbox-close{position:absolute;right:22px;top:18px;font-size:28px;color:white;cursor:pointer}
-    .nav-btn{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:10px;background:rgba(255,255,255,0.06);color:white;border:1px solid rgba(255,255,255,0.06);cursor:pointer;margin:6px}
-
-    /* small screens */
-    @media (max-width:880px){
-      .ad-panel{flex-direction:column;gap:18px;padding:18px}
-      .ad-thumb{width:160px;height:100px}
-      .ad-panel .screenshots-container img{width:160px;height:100px}
-      .lightbox-content{flex-direction:column}
-      .lightbox-side{width:100%}
-      .gallery .shot{width:46%;height:180px}
-    }
-    @media (max-width:480px){
-      .gallery .shot{width:100%;height:200px}
-      header h1{font-size:1.9rem}
-    }
+    /* footer */
+    footer{background:#0f2b3b;color:#e9f6ff;padding:26px;border-radius:12px;margin-top:32px}
+    footer a{color:#dff3ff}
   </style>
 </head>
 <body>
-
-  <!-- Header -->
   <header>
-    <div class="container" style="max-width:1000px">
+    <div class="container">
       <h1>GPULend 🚀</h1>
       <p>Free computation for all — rent and share GPUs to scale AI/ML workloads.</p>
-      <div class="header-cta">
-        <a class="btn" href="https://github.com/Vxtzq/GPULend" target="_blank" rel="noopener">View on GitHub</a>
-      </div>
+      <a class="btn" href="https://github.com/Vxtzq/GPULend" target="_blank" rel="noopener">View on GitHub</a>
     </div>
   </header>
 
   <main class="container" role="main">
-
-    <!-- Advertising panel with enhanced screenshots strip -->
-    <section class="ad-panel" aria-label="GPULend preview">
+    <!-- Larger advertising panel with non-cropped thumbs -->
+    <section class="ad-panel" aria-label="Preview">
       <div class="ad-left">
-        <div style="display:flex;align-items:center;gap:10px;justify-content:center">
-          <span class="ad-badge">NEW</span>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="ad-badge">PREVIEW</span>
           <div>
-            <h3>GPULend in Action</h3>
-            <p class="small">Quick peek at the GUI and job flow — tap images to enlarge.</p>
+            <h3>GPULend — quick preview</h3>
+            <p style="color:var(--muted)">Tap the screenshots to view full-size images. Thumbnails preserve entire UI (no cropping).</p>
           </div>
-        </div>
-        <div style="text-align:center;margin-top:12px">
-          <a class="btn small" href="#screenshots" style="background:white;color:var(--primary)">See gallery</a>
         </div>
       </div>
 
@@ -201,31 +124,22 @@
           <div id="carouselTrack" class="carousel-track">
             <div class="ad-thumb" data-index="0"><img loading="lazy" src="screenshot1.png" alt="GPULend main window"></div>
             <div class="ad-thumb" data-index="1"><img loading="lazy" src="screenshot2.png" alt="GPULend job manager"></div>
-            <!-- duplicate frames for seamless feel -->
-            <div class="ad-thumb" data-index="0"><img loading="lazy" src="screenshot1.png" alt=""></div>
-            <div class="ad-thumb" data-index="1"><img loading="lazy" src="screenshot2.png" alt=""></div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Download box (kept spirit; upgraded) -->
-    <section class="download-box" aria-label="Download GPULend">
-      <div class="download-title">
-        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" aria-hidden><path d="M12 3v11" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 9l5 5 5-5" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><rect x="3" y="17" width="18" height="4" rx="1.2" fill="rgba(255,255,255,0.12)"/></svg>
-        <div>
-          <div style="font-weight:800;font-size:1.05rem">Download GPULend</div>
-          <div style="font-size:.92rem;color:#556b78">Latest snapshot of the <code>main</code> branch (zip)</div>
-        </div>
+    <!-- Download box - same spirit but larger -->
+    <section class="download-box" aria-label="Download">
+      <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:8px">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none"><path d="M12 3v11" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 9l5 5 5-5" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><rect x="3" y="17" width="18" height="4" rx="1.2" fill="rgba(255,255,255,0.12)"/></svg>
+        <div style="font-weight:800;font-size:1.05rem">Download GPULend</div>
       </div>
 
-      <div style="margin-top:16px">
-        <a class="download-cta" id="downloadBtn" href="https://codeload.github.com/Vxtzq/GPULend/zip/refs/heads/main" target="_blank" rel="noopener">
-          Download ZIP
-        </a>
+      <div style="margin-top:8px">
+        <a class="download-cta" href="https://codeload.github.com/Vxtzq/GPULend/zip/refs/heads/main" target="_blank" rel="noopener">Download ZIP</a>
       </div>
-
-      <div class="download-meta">Tip: create a release for permanent, versioned downloads. • <a href="https://github.com/Vxtzq/GPULend/releases" target="_blank" rel="noopener">Releases</a></div>
+      <div class="download-meta">Tip: create a release for permanent, versioned downloads • <a href="https://github.com/Vxtzq/GPULend/releases" target="_blank" rel="noopener">Releases</a></div>
     </section>
 
     <!-- Overview -->
@@ -233,18 +147,18 @@
       <h2 id="overviewTitle">🌟 Overview</h2>
       <div class="cards" role="list">
         <div class="card" role="listitem">
-          <div class="title"><div class="icon" aria-hidden>💻</div><div>Rent GPU</div></div>
-          <div>Run your tasks on community GPUs when you need extra memory or compute.</div>
+          <div class="title"><div class="icon">💻</div><div>Rent GPU</div></div>
+          <div>Run tasks on community GPUs when you need extra VRAM or compute.</div>
         </div>
 
         <div class="card" role="listitem">
-          <div class="title"><div class="icon" aria-hidden>🔗</div><div>Share GPU</div></div>
-          <div>Offer spare GPU time and earn credits — keep resources flowing in the community.</div>
+          <div class="title"><div class="icon">🔗</div><div>Share GPU</div></div>
+          <div>Offer your idle GPU to others and earn credits for compute.</div>
         </div>
 
         <div class="card" role="listitem">
-          <div class="title"><div class="icon" aria-hidden>📊</div><div>Manage Jobs</div></div>
-          <div>Simple job tracking and credit accounting so you know what ran where.</div>
+          <div class="title"><div class="icon">📊</div><div>Manage Jobs</div></div>
+          <div>Simple job tracking, credit accounting, and job history.</div>
         </div>
       </div>
     </section>
@@ -255,27 +169,27 @@
       <div class="cards" role="list">
         <div class="card" role="listitem">
           <div class="title"><div class="icon">⚡</div><div>Lightweight GUI</div></div>
-          <div>Simple interface built with PyQt6 for quick setup and use.</div>
+          <div>PyQt6-based interface for fast setup and responsive use.</div>
         </div>
 
         <div class="card" role="listitem">
           <div class="title"><div class="icon">🖥️</div><div>Auto GPU Detection</div></div>
-          <div>Detects GPUs and available VRAM to recommend where to run jobs.</div>
-        </div>
-
-        <div class="card" role="listitem">
-          <div class="title"><div class="icon">🌐</div><div>Cross-Platform</div></div>
-          <div>Windows and Linux support; AppImage / standalone executables included.</div>
+          <div>Detects GPUs and available VRAM to suggest targets for jobs.</div>
         </div>
 
         <div class="card" role="listitem">
           <div class="title"><div class="icon">🔒</div><div>Containerized Execution</div></div>
-          <div>Runs user jobs inside Podman containers to reduce risk and isolate workloads.</div>
+          <div>Runs jobs inside Podman containers to isolate workloads.</div>
+        </div>
+
+        <div class="card" role="listitem">
+          <div class="title"><div class="icon">🌐</div><div>Cross-Platform</div></div>
+          <div>Windows & Linux support; AppImage or standalone builds provided.</div>
         </div>
       </div>
     </section>
 
-    <!-- Installation (keeps codeblocks) -->
+    <!-- Installation -->
     <section aria-labelledby="installTitle">
       <h2 id="installTitle">🛠 Installation</h2>
       <div class="box" role="region" aria-label="Installation instructions">
@@ -290,7 +204,7 @@ install_and_run.bat</pre>
 chmod +x GPULend.AppImage
 ./GPULend.AppImage</pre>
 
-        <p>Optional: Run from Python (from source):</p>
+        <p>Optional: Run from source:</p>
         <pre>python -m pip install -r requirements.txt
 python app.py</pre>
       </div>
@@ -303,160 +217,68 @@ python app.py</pre>
         <ol>
           <li>Launch GPULend.</li>
           <li>Ensure Podman is installed and detected.</li>
-          <li>Choose a remote GPU and submit your job (monitor status in the Jobs panel).</li>
+          <li>Pick a remote GPU and submit a job; monitor status in the Jobs panel.</li>
         </ol>
       </div>
     </section>
 
-    <!-- Screenshots gallery (enhanced, below the title) -->
+    <!-- Screenshots gallery - below title, full aspect ratio, not cropped -->
     <section id="screenshots" aria-labelledby="screensTitle">
       <h2 id="screensTitle">📸 Screenshots</h2>
-
       <div class="gallery" role="list">
-        <div class="shot" role="listitem" data-index="0" tabindex="0" aria-label="Open screenshot 1">
+        <div class="shot" data-index="0" role="listitem" tabindex="0" aria-label="Open screenshot 1">
           <img loading="lazy" src="screenshot1.png" alt="GPULend main window">
           <div class="shot-caption">Main UI — job list & controls</div>
         </div>
 
-        <div class="shot" role="listitem" data-index="1" tabindex="0" aria-label="Open screenshot 2">
+        <div class="shot" data-index="1" role="listitem" tabindex="0" aria-label="Open screenshot 2">
           <img loading="lazy" src="screenshot2.png" alt="GPULend job details">
           <div class="shot-caption">Job manager and GPU assignment</div>
         </div>
       </div>
     </section>
-
   </main>
 
-  <!-- Lightbox modal -->
-  <div id="lightbox" class="lightbox" aria-hidden="true" role="dialog" aria-modal="true">
-    <div class="lightbox-close" id="lbClose" title="Close">✕</div>
-    <div class="lightbox-content" role="document">
-      <div class="lightbox-img" id="lbImageWrap">
-        <img id="lbImage" src="" alt="">
-      </div>
-      <div class="lightbox-side">
-        <div style="display:flex;align-items:center;gap:10px;justify-content:flex-start;margin-bottom:12px">
-          <button class="nav-btn" id="prevBtn" title="Previous">◀</button>
-          <button class="nav-btn" id="nextBtn" title="Next">▶</button>
-        </div>
-        <div id="lbCaption" style="font-size:0.98rem;margin-bottom:10px;color:#dfeefa"></div>
-        <div style="margin-top:14px;color:#cfe6ff;font-size:.92rem">Click outside image or press Esc to close</div>
-      </div>
-    </div>
-  </div>
-
   <!-- Footer -->
-  <footer style="margin-top:40px;background:#0f2b3b;color:#e9f6ff;padding:28px;border-radius:10px 10px 0 0">
-    <div class="container" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
-      <div>Made with ChatGPT (the 🐐) by <a href="https://github.com/Vxtzq" target="_blank" rel="noopener" style="color:#dff3ff">Vxtzq</a></div>
+  <footer>
+    <div class="container" style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+      <div>Made with ❤️ by <a href="https://github.com/Vxtzq" target="_blank" rel="noopener">Vxtzq</a></div>
       <div style="color:#cfe6ff">Open-source · Podman · PyQt6</div>
     </div>
   </footer>
 
   <script>
-    // ===== Ad panel carousel auto-scroll (simple) =====
+    // Simple carousel auto-scroll (keeps small, non-intrusive)
     (function(){
-      const track = document.getElementById('carouselTrack');
-      let pos = 0;
-      const step = 200; // px step for smooth feel
-      let running = true;
-
-      function tick(){
-        if(!running) return;
-        pos += 1.2; // speed
-        // reset to create loop illusion
-        if(pos > track.scrollWidth / 2) pos = 0;
+      const track = document.querySelector('.carousel-track');
+      if(!track) return;
+      let pos = 0, speed = 0.6;
+      function frame(){
+        pos += speed;
+        if(pos >= track.scrollWidth - track.parentElement.clientWidth) pos = 0;
         track.style.transform = 'translateX(' + (-pos) + 'px)';
-        requestAnimationFrame(tick);
+        requestAnimationFrame(frame);
       }
-      // start after small delay
-      setTimeout(()=> requestAnimationFrame(tick), 600);
-
-      // Pause on hover
-      track.parentElement.addEventListener('mouseenter', ()=> running = false);
-      track.parentElement.addEventListener('mouseleave', ()=> running = true);
-
-      // make thumbs clickable -> open lightbox
-      document.querySelectorAll('.ad-thumb').forEach(el=>{
-        el.addEventListener('click', ()=> {
-          const idx = Number(el.dataset.index || 0);
-          openLightbox(idx);
-        });
-      });
+      let raf = requestAnimationFrame(frame);
+      track.parentElement.addEventListener('mouseenter', ()=> { speed = 0; });
+      track.parentElement.addEventListener('mouseleave', ()=> { speed = 0.6; });
     })();
 
-    // ===== Lightbox logic =====
+    // Simple lightbox for gallery (no external libs)
     (function(){
-      const lb = document.getElementById('lightbox');
-      const lbImg = document.getElementById('lbImage');
-      const lbCaption = document.getElementById('lbCaption');
-      const closeBtn = document.getElementById('lbClose');
-      const prevBtn = document.getElementById('prevBtn');
-      const nextBtn = document.getElementById('nextBtn');
-
-      // source list (must be kept synced with gallery)
-      const images = [
-        {src:'screenshot1.png', alt:'GPULend main window', caption:'Main UI — job list & controls'},
-        {src:'screenshot2.png', alt:'GPULend job details', caption:'Job manager and GPU assignment'}
-      ];
-
-      let current = 0;
       const shots = document.querySelectorAll('.shot');
-
-      function show(idx){
-        if(idx < 0) idx = images.length -1;
-        if(idx >= images.length) idx = 0;
-        current = idx;
-        const it = images[current];
-        lbImg.querySelector('img').src = it.src;
-        lbImg.querySelector('img').alt = it.alt;
-        lbCaption.textContent = it.caption;
-      }
-
-      window.openLightbox = function(idx){
-        show(idx||0);
-        lb.classList.add('open');
-        lb.setAttribute('aria-hidden','false');
-        document.body.style.overflow = 'hidden';
-      };
-      function close(){
-        lb.classList.remove('open');
-        lb.setAttribute('aria-hidden','true');
-        document.body.style.overflow = '';
-      }
-
-      shots.forEach(s=>{
-        s.addEventListener('click', ()=> openLightbox(Number(s.dataset.index)));
-        s.addEventListener('keydown', (e)=>{ if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLightbox(Number(s.dataset.index)); }});
-      });
-
-      closeBtn.addEventListener('click', close);
-      lb.addEventListener('click', (e)=>{
-        if(e.target === lb) close();
-      });
-      document.addEventListener('keydown', (e)=>{
-        if(lb.classList.contains('open')){
-          if(e.key === 'Escape') close();
-          if(e.key === 'ArrowLeft') prev();
-          if(e.key === 'ArrowRight') next();
-        }
-      });
-      prevBtn.addEventListener('click', prev);
-      nextBtn.addEventListener('click', next);
-
-      function prev(){ show(current-1) }
-      function next(){ show(current+1) }
-    })();
-
-    // Accessibility: focus outlines for keyboard users
-    (function(){
-      function handleFirstTab(e){
-        if(e.key === 'Tab'){
-          document.documentElement.classList.add('show-focus');
-          window.removeEventListener('keydown', handleFirstTab);
-        }
-      }
-      window.addEventListener('keydown', handleFirstTab);
+      if(!shots.length) return;
+      // create modal
+      const modal = document.createElement('div');
+      modal.style.position='fixed';modal.style.inset=0;modal.style.display='none';modal.style.alignItems='center';modal.style.justifyContent='center';modal.style.background='rgba(8,12,16,0.78)';modal.style.zIndex=1200;padding='20px';
+      const imgWrap = document.createElement('div'); imgWrap.style.maxWidth='95%'; imgWrap.style.maxHeight='90%';
+      const img = document.createElement('img'); img.style.maxWidth='100%'; img.style.maxHeight='100%'; img.style.objectFit='contain'; imgWrap.appendChild(img);
+      modal.appendChild(imgWrap); document.body.appendChild(modal);
+      function open(i){ img.src = shots[i].querySelector('img').src; modal.style.display='flex'; document.body.style.overflow='hidden'; }
+      function close(){ modal.style.display='none'; document.body.style.overflow=''; }
+      shots.forEach((s, i)=> { s.addEventListener('click', ()=> open(i)); s.addEventListener('keydown', e=>{ if(e.key==='Enter') open(i); }); });
+      modal.addEventListener('click', (e)=> { if(e.target===modal) close(); });
+      document.addEventListener('keydown', e=> { if(e.key==='Escape') close(); });
     })();
   </script>
 </body>
