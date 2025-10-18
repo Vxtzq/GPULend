@@ -10,10 +10,10 @@
     body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; background: #f4f6f8; color: #333; }
     a { color: #3498db; text-decoration: none; }
     a:hover { text-decoration: underline; }
-    section { padding: 60px 20px; max-width: 900px; margin: auto; }
+    section { padding: 60px 20px; max-width: 1000px; margin: auto; }
     h1, h2 { color: #2c3e50; margin-bottom: 20px; }
     p { margin-bottom: 15px; }
-    
+
     /* Header */
     header { background: #3498db; color: #fff; padding: 60px 20px; text-align: center; }
     header h1 { font-size: 2.8em; margin-bottom: 10px; }
@@ -21,16 +21,26 @@
     .btn { display: inline-block; margin-top: 20px; padding: 12px 25px; background: #fff; color: #3498db; border-radius: 5px; font-weight: bold; transition: 0.3s; }
     .btn:hover { background: #ecf0f1; }
 
-    /* Overview & Features */
+    /* Cards */
     .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 30px; }
-    .card { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: transform 0.2s; }
+    .card { background: #fff; padding: 25px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); transition: transform 0.3s; text-align: center; }
     .card:hover { transform: translateY(-5px); }
+    .card-icon { font-size: 2em; margin-bottom: 10px; color: #3498db; }
+
+    /* Installation */
+    .install-box { background: #fff; padding: 25px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); margin-top: 20px; }
 
     /* Screenshots */
-    .screenshots img { max-width: 100%; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+    .screenshots { display: flex; overflow-x: auto; gap: 20px; padding-bottom: 20px; }
+    .screenshots img { flex: 0 0 auto; width: 300px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 
     /* Footer */
     footer { text-align: center; padding: 40px 20px; background: #2c3e50; color: #fff; }
+
+    /* Scrollbar styling for screenshots */
+    .screenshots::-webkit-scrollbar { height: 8px; }
+    .screenshots::-webkit-scrollbar-thumb { background: #3498db; border-radius: 4px; }
+    .screenshots::-webkit-scrollbar-track { background: #eee; border-radius: 4px; }
   </style>
 </head>
 <body>
@@ -46,9 +56,9 @@
   <section>
     <h2>🌟 Overview</h2>
     <div class="cards">
-      <div class="card"><strong>Rent GPU</strong><p>Access high-VRAM GPUs from the community.</p></div>
-      <div class="card"><strong>Share GPU</strong><p>Offer your own GPU to help others and earn credits.</p></div>
-      <div class="card"><strong>Manage Jobs & Credits</strong><p>Track tasks, usage, and rewards with ease.</p></div>
+      <div class="card"><div class="card-icon">💻</div><strong>Rent GPU</strong><p>Access high-VRAM GPUs from the community.</p></div>
+      <div class="card"><div class="card-icon">🔗</div><strong>Share GPU</strong><p>Offer your own GPU to help others and earn credits.</p></div>
+      <div class="card"><div class="card-icon">📊</div><strong>Manage Jobs & Credits</strong><p>Track tasks, usage, and rewards with ease.</p></div>
     </div>
   </section>
 
@@ -56,30 +66,32 @@
   <section>
     <h2>✨ Features</h2>
     <div class="cards">
-      <div class="card"><strong>Lightweight GUI</strong><p>Portable, fast, and easy to use interface.</p></div>
-      <div class="card"><strong>Automatic GPU Detection</strong><p>Detects available GPUs and manages resources automatically.</p></div>
-      <div class="card"><strong>Cross-Platform</strong><p>Works on Windows and Linux systems.</p></div>
-      <div class="card"><strong>Secure Execution</strong><p>Runs tasks in Podman containers to ensure safety.</p></div>
-      <div class="card"><strong>Easy Installation</strong><p>Standalone executable or AppImage – no complex setup required.</p></div>
+      <div class="card"><div class="card-icon">⚡</div><strong>Lightweight GUI</strong><p>Portable, fast, and easy to use interface.</p></div>
+      <div class="card"><div class="card-icon">🖥️</div><strong>Automatic GPU Detection</strong><p>Detects available GPUs and manages resources automatically.</p></div>
+      <div class="card"><div class="card-icon">🌐</div><strong>Cross-Platform</strong><p>Works on Windows and Linux systems.</p></div>
+      <div class="card"><div class="card-icon">🔒</div><strong>Secure Execution</strong><p>Runs tasks in Podman containers to ensure safety.</p></div>
+      <div class="card"><div class="card-icon">🛠️</div><strong>Easy Installation</strong><p>Standalone executable or AppImage – no complex setup required.</p></div>
     </div>
   </section>
 
   <!-- Installation -->
   <section>
     <h2>🛠 Installation</h2>
-    <h3>Windows</h3>
-    <p>Download the standalone <code>.exe</code> or run the installer:</p>
-    <pre>git clone https://github.com/Vxtzq/GPULend
+    <div class="install-box">
+      <h3>Windows</h3>
+      <p>Download the standalone <code>.exe</code> or run the installer:</p>
+      <pre>git clone https://github.com/Vxtzq/GPULend
 install_and_run.bat</pre>
 
-    <h3>Linux</h3>
-    <p>Run AppImage:</p>
-    <pre>git clone https://github.com/Vxtzq/GPULend
+      <h3>Linux</h3>
+      <p>Run AppImage:</p>
+      <pre>git clone https://github.com/Vxtzq/GPULend
 chmod +x GPULend.AppImage
 ./GPULend.AppImage</pre>
-    <p>Optional: Run from Python:</p>
-    <pre>python -m pip install -r requirements.txt
+      <p>Optional: Run from Python:</p>
+      <pre>python -m pip install -r requirements.txt
 python app.py</pre>
+    </div>
   </section>
 
   <!-- Quick Start -->
@@ -95,13 +107,15 @@ python app.py</pre>
   <!-- Screenshots -->
   <section class="screenshots">
     <h2>📸 Screenshots</h2>
-    <img src="screenshot1.png" alt="GPULend Screenshot 1">
-    <img src="screenshot2.png" alt="GPULend Screenshot 2">
+    <div class="screenshots">
+      <img src="screenshot1.png" alt="GPULend Screenshot 1">
+      <img src="screenshot2.png" alt="GPULend Screenshot 2">
+    </div>
   </section>
 
   <!-- Footer -->
   <footer>
-    Made with ❤️ by <a href="https://github.com/Vxtzq" target="_blank" style="color:#fff;">Vxtzq</a>
+    Made by <a href="https://github.com/Vxtzq" target="_blank" style="color:#fff;">Vxtzq</a>
   </footer>
 
 </body>
