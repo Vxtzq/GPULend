@@ -27,20 +27,20 @@
     .card:hover { transform: translateY(-5px); }
     .card-icon { font-size: 2em; margin-bottom: 10px; color: #3498db; }
 
-    /* Installation */
-    .install-box { background: #fff; padding: 25px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); margin-top: 20px; }
+    /* Boxes */
+    .box { background: #fff; padding: 25px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); margin-top: 20px; }
 
     /* Screenshots */
-    .screenshots { display: flex; overflow-x: auto; gap: 20px; padding-bottom: 20px; }
-    .screenshots img { flex: 0 0 auto; width: 300px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+    .screenshots-container { display: flex; overflow-x: auto; gap: 20px; padding-top: 20px; }
+    .screenshots-container img { flex: 0 0 auto; width: 300px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 
     /* Footer */
     footer { text-align: center; padding: 40px 20px; background: #2c3e50; color: #fff; }
 
     /* Scrollbar styling for screenshots */
-    .screenshots::-webkit-scrollbar { height: 8px; }
-    .screenshots::-webkit-scrollbar-thumb { background: #3498db; border-radius: 4px; }
-    .screenshots::-webkit-scrollbar-track { background: #eee; border-radius: 4px; }
+    .screenshots-container::-webkit-scrollbar { height: 8px; }
+    .screenshots-container::-webkit-scrollbar-thumb { background: #3498db; border-radius: 4px; }
+    .screenshots-container::-webkit-scrollbar-track { background: #eee; border-radius: 4px; }
   </style>
 </head>
 <body>
@@ -56,9 +56,9 @@
   <section>
     <h2>🌟 Overview</h2>
     <div class="cards">
-      <div class="card"><div class="card-icon">💻</div><strong>Rent GPU</strong><p>Access high-VRAM GPUs from the community.</p></div>
-      <div class="card"><div class="card-icon">🔗</div><strong>Share GPU</strong><p>Offer your own GPU to help others and earn credits.</p></div>
-      <div class="card"><div class="card-icon">📊</div><strong>Manage Jobs & Credits</strong><p>Track tasks, usage, and rewards with ease.</p></div>
+      <div class="card"><div class="card-icon">💻</div><strong>Rent GPU</strong><p>Use GPUs from other users to run your tasks.</p></div>
+      <div class="card"><div class="card-icon">🔗</div><strong>Share GPU</strong><p>Offer your GPU for others and earn credits.</p></div>
+      <div class="card"><div class="card-icon">📊</div><strong>Manage Jobs</strong><p>Keep track of tasks, credits, and usage.</p></div>
     </div>
   </section>
 
@@ -66,18 +66,18 @@
   <section>
     <h2>✨ Features</h2>
     <div class="cards">
-      <div class="card"><div class="card-icon">⚡</div><strong>Lightweight GUI</strong><p>Portable, fast, and easy to use interface.</p></div>
-      <div class="card"><div class="card-icon">🖥️</div><strong>Automatic GPU Detection</strong><p>Detects available GPUs and manages resources automatically.</p></div>
-      <div class="card"><div class="card-icon">🌐</div><strong>Cross-Platform</strong><p>Works on Windows and Linux systems.</p></div>
-      <div class="card"><div class="card-icon">🔒</div><strong>Secure Execution</strong><p>Runs tasks in Podman containers to ensure safety.</p></div>
-      <div class="card"><div class="card-icon">🛠️</div><strong>Easy Installation</strong><p>Standalone executable or AppImage – no complex setup required.</p></div>
+      <div class="card"><div class="card-icon">⚡</div><strong>Lightweight GUI</strong><p>Fast, simple interface.</p></div>
+      <div class="card"><div class="card-icon">🖥️</div><strong>Auto GPU Detection</strong><p>Automatically finds available GPUs.</p></div>
+      <div class="card"><div class="card-icon">🌐</div><strong>Cross-Platform</strong><p>Windows and Linux support.</p></div>
+      <div class="card"><div class="card-icon">🔒</div><strong>Secure Execution</strong><p>Runs tasks in safe Podman containers.</p></div>
+      <div class="card"><div class="card-icon">🛠️</div><strong>Easy Installation</strong><p>Standalone executable or AppImage.</p></div>
     </div>
   </section>
 
   <!-- Installation -->
   <section>
     <h2>🛠 Installation</h2>
-    <div class="install-box">
+    <div class="box">
       <h3>Windows</h3>
       <p>Download the standalone <code>.exe</code> or run the installer:</p>
       <pre>git clone https://github.com/Vxtzq/GPULend
@@ -88,6 +88,7 @@ install_and_run.bat</pre>
       <pre>git clone https://github.com/Vxtzq/GPULend
 chmod +x GPULend.AppImage
 ./GPULend.AppImage</pre>
+
       <p>Optional: Run from Python:</p>
       <pre>python -m pip install -r requirements.txt
 python app.py</pre>
@@ -97,17 +98,19 @@ python app.py</pre>
   <!-- Quick Start -->
   <section>
     <h2>⚡ Quick Start</h2>
-    <ol>
-      <li>Launch GPULend.</li>
-      <li>Ensure Podman is installed and detected.</li>
-      <li>Offload computation tasks to available GPUs effortlessly.</li>
-    </ol>
+    <div class="box">
+      <ol>
+        <li>Launch GPULend.</li>
+        <li>Ensure Podman is installed and detected.</li>
+        <li>Offload computation tasks to available GPUs effortlessly.</li>
+      </ol>
+    </div>
   </section>
 
   <!-- Screenshots -->
-  <section class="screenshots">
+  <section>
     <h2>📸 Screenshots</h2>
-    <div class="screenshots">
+    <div class="screenshots-container">
       <img src="screenshot1.png" alt="GPULend Screenshot 1">
       <img src="screenshot2.png" alt="GPULend Screenshot 2">
     </div>
