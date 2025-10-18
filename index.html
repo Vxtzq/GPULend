@@ -6,25 +6,6 @@
   <title>GPULend – GPU Sharing App</title>
   <style>
     /* Reset and base */
-    pre {
-    background: #2d2d2d;
-    color: #f8f8f2;
-    padding: 15px;
-    border-radius: 10px;
-    overflow-x: auto;
-    font-family: 'Fira Code', monospace;
-    font-size: 0.95em;
-    margin-bottom: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  }
-
-  code {
-    background: #eaeaea;
-    color: #c7254e;
-    padding: 2px 5px;
-    border-radius: 5px;
-    font-family: monospace;
-  }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; background: #f4f6f8; color: #333; }
     a { color: #3498db; text-decoration: none; }
@@ -40,6 +21,16 @@
     .btn { display: inline-block; margin-top: 20px; padding: 12px 25px; background: #fff; color: #3498db; border-radius: 5px; font-weight: bold; transition: 0.3s; }
     .btn:hover { background: #ecf0f1; }
 
+    /* Advertising panel */
+    .ad-panel { background: #e8f4fd; border-radius: 15px; padding: 40px 20px; margin: 40px auto; box-shadow: 0 8px 20px rgba(0,0,0,0.1); text-align:center; }
+    .ad-panel h2 { margin-bottom: 15px; }
+    .ad-panel p { margin-bottom: 25px; }
+    .ad-panel .screenshots-container { display: flex; overflow-x: auto; gap: 20px; justify-content:center; }
+    .ad-panel .screenshots-container img { flex: 0 0 auto; width: 200px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+    .ad-panel .screenshots-container::-webkit-scrollbar { height: 8px; }
+    .ad-panel .screenshots-container::-webkit-scrollbar-thumb { background: #3498db; border-radius: 4px; }
+    .ad-panel .screenshots-container::-webkit-scrollbar-track { background: #eee; border-radius: 4px; }
+
     /* Cards */
     .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 30px; }
     .card { background: #fff; padding: 25px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); transition: transform 0.3s; text-align: center; }
@@ -52,14 +43,37 @@
     /* Screenshots */
     .screenshots-container { display: flex; overflow-x: auto; gap: 20px; padding-top: 20px; }
     .screenshots-container img { flex: 0 0 auto; width: 300px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+    .screenshots-container::-webkit-scrollbar { height: 8px; }
+    .screenshots-container::-webkit-scrollbar-thumb { background: #3498db; border-radius: 4px; }
+    .screenshots-container::-webkit-scrollbar-track { background: #eee; border-radius: 4px; }
+
+    /* Download box */
+    .download-box { background: #fff; border-radius: 15px; padding: 40px 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); text-align: center; margin: 60px auto; max-width: 600px; }
+    .download-box a { display:inline-block; padding:15px 30px; background:#3498db; color:#fff; font-weight:bold; border-radius:10px; font-size:1.2em; transition:0.3s; text-decoration:none; }
+    .download-box a:hover { background:#217dbb; }
 
     /* Footer */
     footer { text-align: center; padding: 40px 20px; background: #2c3e50; color: #fff; }
 
-    /* Scrollbar styling for screenshots */
-    .screenshots-container::-webkit-scrollbar { height: 8px; }
-    .screenshots-container::-webkit-scrollbar-thumb { background: #3498db; border-radius: 4px; }
-    .screenshots-container::-webkit-scrollbar-track { background: #eee; border-radius: 4px; }
+    /* Code blocks */
+    pre {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 15px;
+      border-radius: 10px;
+      overflow-x: auto;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.95em;
+      margin-bottom: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    code {
+      background: #eaeaea;
+      color: #c7254e;
+      padding: 2px 5px;
+      border-radius: 5px;
+      font-family: monospace;
+    }
   </style>
 </head>
 <body>
@@ -70,13 +84,23 @@
     <p>Free computation for all – rent and share GPUs seamlessly for AI/ML projects.</p>
     <a class="btn" href="https://github.com/Vxtzq/GPULend" target="_blank">View on GitHub</a>
   </header>
-  <section style="text-align:center; padding:40px 20px; background:#e8f4fd; border-radius:15px; margin:40px auto; max-width:800px; box-shadow:0 8px 20px rgba(0,0,0,0.1);">
-  <h2>⬇️ Download GPULend</h2>
-  <p>Get the latest version of GPULend directly from GitHub.</p>
-  <a href="https://codeload.github.com/Vxtzq/GPULend/zip/refs/heads/main" target="_blank" style="display:inline-block; padding:15px 30px; background:#3498db; color:#fff; font-weight:bold; border-radius:10px; font-size:1.2em; transition:0.3s; text-decoration:none;">
-    Download ZIP
-  </a>
-</section>
+
+  <!-- Advertising Panel -->
+  <section class="ad-panel">
+    <h2>🚀 GPULend in Action</h2>
+    <p>Check out the interface and GPU sharing workflow!</p>
+    <div class="screenshots-container">
+      <img src="screenshot1.png" alt="GPULend Screenshot 1">
+      <img src="screenshot2.png" alt="GPULend Screenshot 2">
+    </div>
+  </section>
+
+  <!-- Download Section -->
+  <section class="download-box">
+    <h2>⬇️ Download GPULend</h2>
+    <p>Get the latest version directly from GitHub.</p>
+    <a href="https://codeload.github.com/Vxtzq/GPULend/zip/refs/heads/main" target="_blank">Download ZIP</a>
+  </section>
 
   <!-- Overview -->
   <section>
@@ -133,7 +157,7 @@ python app.py</pre>
     </div>
   </section>
 
-  <!-- Screenshots -->
+  <!-- Screenshots Section -->
   <section>
     <h2>📸 Screenshots</h2>
     <div class="screenshots-container">
