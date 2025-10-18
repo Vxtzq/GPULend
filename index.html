@@ -1,410 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GPULend – GPU Sharing App</title>
   <style>
-    :root{
-      --primary: #2b85d6;
-      --primary-2: #1f6fb0;
-      --bg: #f6f8fa;
-      --card: #ffffff;
-      --muted: #556b78;
-      --accent: #0f62fe;
-      --radius: 10px;
-      --max-width: 1200px;
-    }
-
-    *{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%}
-    body{
-      font-family: "Inter", "Segoe UI", Roboto, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
-      background: linear-gradient(180deg,#fbfdff,#f3f6f9);
-      color:#152026;
-      line-height:1.45;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      padding:28px 18px;
-    }
-
-    .wrap{max-width:var(--max-width);margin:0 auto}
+    /* Reset and base */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; background: #f4f6f8; color: #333; }
+    a { color: #3498db; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    section { padding: 60px 20px; max-width: 1000px; margin: auto; }
+    h1, h2 { color: #2c3e50; margin-bottom: 20px; }
+    p { margin-bottom: 15px; }
 
     /* Header */
-    header{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:20px;
-      background: linear-gradient(90deg,var(--primary),var(--primary-2));
-      color:#fff;
-      padding:28px;
-      border-radius:var(--radius);
-      box-shadow: 0 8px 30px rgba(12,24,40,0.06);
-    }
-    .hero {
-      display:flex;
-      gap:14px;
-      align-items:center;
-    }
-    .hero h1{
-      font-size:1.6rem;
-      font-weight:700;
-      letter-spacing:-0.02em;
-      margin-bottom:6px;
-    }
-    .hero p{opacity:.92;margin-top:4px;color:rgba(255,255,255,0.95);font-weight:500}
+    header { background: #3498db; color: #fff; padding: 60px 20px; text-align: center; }
+    header h1 { font-size: 2.8em; margin-bottom: 10px; }
+    header p { font-size: 1.3em; }
+    .btn { display: inline-block; margin-top: 20px; padding: 12px 25px; background: #fff; color: #3498db; border-radius: 5px; font-weight: bold; transition: 0.3s; }
+    .btn:hover { background: #ecf0f1; }
 
-    /* Header actions (Github big button) */
-    .header-actions{display:flex;gap:12px;align-items:center}
-    .github-btn{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      background: #fff;
-      color:var(--primary);
-      font-weight:700;
-      border-radius:8px;
-      padding:12px 18px;
-      text-decoration:none;
-      box-shadow: 0 8px 24px rgba(18,40,65,0.06);
-      transform: translateZ(0);
-      border: 1px solid rgba(0,0,0,0.04);
-    }
-    .github-btn svg{height:18px;width:18px}
-    .github-btn:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(18,40,65,0.08)}
+    /* Cards */
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 30px; }
+    .card { background: #fff; padding: 25px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); transition: transform 0.3s; text-align: center; }
+    .card:hover { transform: translateY(-5px); }
+    .card-icon { font-size: 2em; margin-bottom: 10px; color: #3498db; }
 
-    .view-small{font-size:.9rem;color:rgba(255,255,255,0.95);opacity:.95;text-decoration:none}
+    /* Boxes */
+    .box { background: #fff; padding: 25px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); margin-top: 20px; }
 
-    /* Layout sections */
-    main{margin-top:28px}
-    .grid{
-      display:grid;
-      grid-template-columns: 1fr 420px;
-      gap:22px;
-      align-items:start;
-    }
-    @media(max-width:980px){
-      .grid{grid-template-columns:1fr}
-    }
-
-    /* AD PREVIEW — larger, airy */
-    .preview {
-      background: var(--card);
-      border-radius:var(--radius);
-      padding:20px;
-      box-shadow: 0 10px 32px rgba(12,24,40,0.04);
-      display:flex;
-      gap:18px;
-      align-items:stretch;
-      min-height:220px;
-    }
-
-    .preview-left{flex:1;display:flex;flex-direction:column;justify-content:center;gap:12px}
-    .preview-left .badge{display:inline-block;background:var(--primary);color:#fff;padding:6px 10px;border-radius:999px;font-weight:800;font-size:.82rem}
-    .preview-left h3{margin:0;font-size:1.15rem}
-    .preview-left p{color:var(--muted);font-size:.95rem}
-
-    /* Carousel area - larger thumbs, keep whole image (contain) */
-    .preview-right{width:520px;max-width:52vw;min-width:320px;display:flex;flex-direction:column;gap:10px;align-items:center;justify-content:center}
-    .carousel{
-      width:100%;
-      border-radius:8px;
-      overflow:hidden;
-      background:linear-gradient(180deg,#fbfdff,#f3f7fb);
-      padding:12px;
-      display:flex;
-      gap:12px;
-      align-items:center;
-      justify-content:center;
-      box-shadow: inset 0 -1px 0 rgba(0,0,0,0.02);
-    }
-    .thumbs{display:flex;gap:12px;align-items:center;justify-content:center;overflow:auto;padding:6px}
-    .thumb{
-      flex:0 0 auto;
-      width:440px;
-      aspect-ratio:16/9;
-      border-radius:8px;
-      background:#fff;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      cursor:pointer;
-      border:1px solid rgba(8,16,24,0.04);
-    }
-    .thumb img{width:100%;height:100%;object-fit:contain;display:block}
-    .thumb:focus{outline:2px solid rgba(43,133,214,0.14);box-shadow:0 6px 22px rgba(12,24,40,0.06)}
-
-    /* Right column (download box) — bigger and clear */
-    .download {
-      background: linear-gradient(180deg,#fff,#fbfcff);
-      border-radius:var(--radius);
-      padding:22px;
-      box-shadow: 0 10px 32px rgba(12,24,40,0.04);
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      align-items:center;
-    }
-    .download .title{display:flex;align-items:center;gap:12px}
-    .download h3{margin:0;font-size:1.05rem}
-    .download .cta-row{display:flex;gap:12px;align-items:center;margin-top:6px}
-    .download .cta{
-      padding:14px 20px;
-      background:var(--primary);
-      color:#fff;
-      font-weight:800;
-      border-radius:10px;
-      text-decoration:none;
-      display:inline-flex;
-      gap:10px;
-      align-items:center;
-      box-shadow: 0 14px 40px rgba(43,133,214,0.12);
-    }
-    .download .secondary{
-      padding:10px 14px;
-      background:transparent;
-      color:var(--primary);
-      border-radius:8px;
-      border:1px solid rgba(43,133,214,0.12);
-      text-decoration:none;
-      font-weight:700;
-    }
-    .download .meta{color:var(--muted);font-size:.92rem;margin-top:6px;text-align:center}
-
-    /* Secondary content sections (cards / boxes) */
-    .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:22px}
-    .card{
-      background:var(--card);
-      padding:14px;
-      border-radius:8px;
-      border:1px solid rgba(6,20,30,0.02);
-    }
-    .card .title{font-weight:700;margin-bottom:8px}
-
-    .box{background:var(--card);padding:14px;border-radius:8px;border:1px solid rgba(6,20,30,0.02)}
-    pre{
-      background:#0f1720;color:#e6eef6;padding:12px;border-radius:8px;overflow:auto;font-family:ui-monospace, "Fira Code", monospace;font-size:.95rem
-    }
-    code{background:#eef6fb;padding:3px 6px;border-radius:6px;color:#08334a}
-
-    /* gallery larger */
-    .gallery{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:14px}
-    .shot{width:460px;aspect-ratio:16/9;border-radius:8px;overflow:hidden;background:#fff;border:1px solid rgba(6,20,30,0.02);display:flex;align-items:center;justify-content:center;cursor:pointer}
-    .shot img{width:100%;height:100%;object-fit:contain;display:block}
+    /* Screenshots */
+    .screenshots-container { display: flex; overflow-x: auto; gap: 20px; padding-top: 20px; }
+    .screenshots-container img { flex: 0 0 auto; width: 300px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 
     /* Footer */
-    footer{margin-top:30px;padding:18px;border-radius:8px;background:linear-gradient(180deg,#f9fbfe,#eef4fb);display:flex;justify-content:space-between;align-items:center;gap:12px}
-    footer .muted{color:var(--muted)}
+    footer { text-align: center; padding: 40px 20px; background: #2c3e50; color: #fff; }
 
-    @media(max-width:740px){
-      .preview-right{min-width:0;width:100%}
-      .thumb{width:280px}
-      .download{order:-1}
-      .download .cta-row{flex-direction:column}
-    }
+    /* Scrollbar styling for screenshots */
+    .screenshots-container::-webkit-scrollbar { height: 8px; }
+    .screenshots-container::-webkit-scrollbar-thumb { background: #3498db; border-radius: 4px; }
+    .screenshots-container::-webkit-scrollbar-track { background: #eee; border-radius: 4px; }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div class="hero">
-        <div>
-          <h1>GPULend 🚀</h1>
-          <p>Rent and share GPUs — lightweight, containerized, community-powered compute.</p>
-        </div>
-      </div>
 
-      <div class="header-actions">
-        <a class="github-btn" href="https://github.com/Vxtzq/GPULend" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M12 .5C5.73.5.75 5.47.75 11.74c0 4.93 3.2 9.11 7.64 10.58.56.1.77-.24.77-.54 0-.27-.01-1.16-.01-2.11-3.11.68-3.77-.75-3.77-.75-.51-1.31-1.25-1.66-1.25-1.66-1.02-.7.08-.69.08-.69 1.13.08 1.72 1.17 1.72 1.17 1.01 1.73 2.66 1.23 3.31.94.1-.74.39-1.23.71-1.52-2.48-.28-5.09-1.24-5.09-5.52 0-1.22.43-2.22 1.14-3.01-.11-.28-.5-1.4.11-2.92 0 0 .93-.3 3.05 1.14a10.55 10.55 0 0 1 5.56 0c2.12-1.44 3.05-1.14 3.05-1.14.61 1.52.22 2.64.11 2.92.71.79 1.14 1.79 1.14 3.01 0 4.29-2.62 5.23-5.11 5.51.4.34.76 1.01.76 2.03 0 1.47-.01 2.65-.01 3.01 0 .3.2.65.78.54 4.44-1.48 7.64-5.64 7.64-10.57C23.25 5.47 18.27.5 12 .5z"/>
-          </svg>
-          View on GitHub
-        </a>
-        <a class="view-small" href="#screenshots">Screenshots</a>
-      </div>
-    </header>
+  <!-- Header -->
+  <header>
+    <h1>GPULend 🚀</h1>
+    <p>Free computation for all – rent and share GPUs seamlessly for AI/ML projects.</p>
+    <a class="btn" href="https://github.com/Vxtzq/GPULend" target="_blank">View on GitHub</a>
+  </header>
 
-    <main>
-      <div class="grid" style="margin-top:20px">
-        <!-- left: preview + extra content -->
-        <div>
-          <section class="preview" aria-label="Preview">
-            <div class="preview-left">
-              <div>
-                <span class="badge">PREVIEW</span>
-                <span style="margin-left:8px;font-weight:700">GPULend — quick look</span>
-              </div>
-              <h3>See GPULend in action</h3>
-              <p>Scroll through UI screenshots and job flow examples. Thumbnails show the full UI without cropping — tap to enlarge.</p>
-              <div style="display:flex;gap:10px;margin-top:8px;align-items:center">
-                <a class="download-cta" href="https://codeload.github.com/Vxtzq/GPULend/zip/refs/heads/main" target="_blank" rel="noopener" style="background:linear-gradient(90deg,var(--primary),var(--primary-2))">
-                  Download ZIP
-                </a>
-                <a class="secondary" href="https://github.com/Vxtzq/GPULend/releases" target="_blank" rel="noopener" style="padding:10px 14px;border-radius:8px;background:transparent;color:var(--primary);text-decoration:none;border:1px solid rgba(43,133,214,0.12);font-weight:700">
-                  Releases
-                </a>
-              </div>
-            </div>
+  <!-- Overview -->
+  <section>
+    <h2>🌟 Overview</h2>
+    <div class="cards">
+      <div class="card"><div class="card-icon">💻</div><strong>Rent GPU</strong><p>Use GPUs from other users to run your tasks.</p></div>
+      <div class="card"><div class="card-icon">🔗</div><strong>Share GPU</strong><p>Offer your GPU for others and earn credits.</p></div>
+      <div class="card"><div class="card-icon">📊</div><strong>Manage Jobs</strong><p>Keep track of tasks, credits, and usage.</p></div>
+    </div>
+  </section>
 
-            <div class="preview-right" aria-hidden="false">
-              <div class="carousel" role="region" aria-label="Screenshots carousel">
-                <div class="thumbs" id="thumbs">
-                  <div class="thumb" data-full="screenshot1.png" tabindex="0" aria-label="Screenshot 1">
-                    <img src="screenshot1.png" alt="GPULend main window">
-                  </div>
-                  <div class="thumb" data-full="screenshot2.png" tabindex="0" aria-label="Screenshot 2">
-                    <img src="screenshot2.png" alt="GPULend job manager">
-                  </div>
-                  <!-- Add more thumbs here if needed -->
-                </div>
-              </div>
-              <div style="display:flex;gap:10px;justify-content:center;margin-top:6px">
-                <button id="prev" aria-label="Previous" style="background:#fff;border-radius:8px;padding:8px 10px;border:1px solid rgba(10,20,30,0.04);cursor:pointer">◀</button>
-                <button id="next" aria-label="Next" style="background:#fff;border-radius:8px;padding:8px 10px;border:1px solid rgba(10,20,30,0.04);cursor:pointer">▶</button>
-              </div>
-            </div>
-          </section>
+  <!-- Features -->
+  <section>
+    <h2>✨ Features</h2>
+    <div class="cards">
+      <div class="card"><div class="card-icon">⚡</div><strong>Lightweight GUI</strong><p>Fast, simple interface.</p></div>
+      <div class="card"><div class="card-icon">🖥️</div><strong>Auto GPU Detection</strong><p>Automatically finds available GPUs.</p></div>
+      <div class="card"><div class="card-icon">🌐</div><strong>Cross-Platform</strong><p>Windows and Linux support.</p></div>
+      <div class="card"><div class="card-icon">🔒</div><strong>Secure Execution</strong><p>Runs tasks in safe Podman containers.</p></div>
+      <div class="card"><div class="card-icon">🛠️</div><strong>Easy Installation</strong><p>Standalone executable or AppImage.</p></div>
+    </div>
+  </section>
 
-          <!-- Overview / features -->
-          <section style="margin-top:18px">
-            <h2 style="font-size:1.15rem;margin-bottom:10px">🌟 Overview</h2>
-            <div class="cards">
-              <div class="card">
-                <div class="title">Rent GPU</div>
-                <div class="muted" style="color:var(--muted)">Use community GPUs to accelerate training and inference without buying hardware.</div>
-              </div>
-              <div class="card">
-                <div class="title">Share GPU</div>
-                <div class="muted" style="color:var(--muted)">Offer idle GPU time and earn credits in a secure, containerized environment.</div>
-              </div>
-              <div class="card">
-                <div class="title">Manage Jobs</div>
-                <div class="muted" style="color:var(--muted)">Track job status, resource usage, and job logs from the dashboard.</div>
-              </div>
-            </div>
-          </section>
-
-          <section style="margin-top:18px">
-            <h2 style="font-size:1.15rem;margin-bottom:10px">🛠 Installation</h2>
-            <div class="box">
-              <h3 style="margin:0 0 8px 0">Windows</h3>
-              <p style="color:var(--muted);margin-bottom:8px">Standalone installer or run from repo:</p>
-              <pre>git clone https://github.com/Vxtzq/GPULend
+  <!-- Installation -->
+  <section>
+    <h2>🛠 Installation</h2>
+    <div class="box">
+      <h3>Windows</h3>
+      <p>Download the standalone <code>.exe</code> or run the installer:</p>
+      <pre>git clone https://github.com/Vxtzq/GPULend
 install_and_run.bat</pre>
 
-              <h3 style="margin:12px 0 8px 0">Linux</h3>
-              <p style="color:var(--muted);margin-bottom:8px">AppImage or source:</p>
-              <pre>git clone https://github.com/Vxtzq/GPULend
+      <h3>Linux</h3>
+      <p>Run AppImage:</p>
+      <pre>git clone https://github.com/Vxtzq/GPULend
 chmod +x GPULend.AppImage
 ./GPULend.AppImage</pre>
-            </div>
-          </section>
-        </div>
 
-        <!-- right column: download / small highlights -->
-        <aside>
-          <section class="download" aria-label="Download GPULend">
-            <div class="title">
-              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="flex-shrink:0">
-                <path d="M12 3v11" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M7 9l5 5 5-5" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <div>
-                <h3 style="margin:0">Download</h3>
-                <div style="font-size:.92rem;color:var(--muted)">Get the latest build or browse releases</div>
-              </div>
-            </div>
+      <p>Optional: Run from Python:</p>
+      <pre>python -m pip install -r requirements.txt
+python app.py</pre>
+    </div>
+  </section>
 
-            <div class="cta-row">
-              <a class="cta" href="https://codeload.github.com/Vxtzq/GPULend/zip/refs/heads/main" target="_blank" rel="noopener">Download ZIP</a>
-              <a class="secondary" href="https://github.com/Vxtzq/GPULend" target="_blank" rel="noopener">Open on GitHub</a>
-            </div>
+  <!-- Quick Start -->
+  <section>
+    <h2>⚡ Quick Start</h2>
+    <div class="box">
+      <ol>
+        <li>Launch GPULend.</li>
+        <li>Ensure Podman is installed and detected.</li>
+        <li>Offload computation tasks to available GPUs effortlessly.</li>
+      </ol>
+    </div>
+  </section>
 
-            <div class="meta">
-              <div style="margin-bottom:6px">Or choose:</div>
-              <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
-                <a class="secondary" href="https://github.com/Vxtzq/GPULend/releases" target="_blank" rel="noopener">Releases</a>
-                <a class="secondary" href="#" target="_blank" rel="noopener">Documentation</a>
-                <a class="secondary" href="#" target="_blank" rel="noopener">Changelog</a>
-              </div>
-            </div>
-          </section>
+  <!-- Screenshots -->
+  <section>
+    <h2>📸 Screenshots</h2>
+    <div class="screenshots-container">
+      <img src="screenshot1.png" alt="GPULend Screenshot 1">
+      <img src="screenshot2.png" alt="GPULend Screenshot 2">
+    </div>
+  </section>
 
-          <section style="margin-top:14px">
-            <div class="box">
-              <h4 style="margin:0 0 8px 0">Quick Start</h4>
-              <div style="color:var(--muted)">1) Download → 2) Run installer or AppImage → 3) Select GPU and submit job.</div>
-            </div>
-          </section>
-        </aside>
-      </div>
+  <!-- Footer -->
+  <footer>
+    Made by <a href="https://github.com/Vxtzq" target="_blank" style="color:#fff;">Vxtzq</a>
+  </footer>
 
-      <!-- gallery below -->
-      <section style="margin-top:22px">
-        <h2 style="font-size:1.15rem;margin-bottom:10px">📸 Screenshots</h2>
-        <div class="gallery" aria-label="Gallery">
-          <div class="shot" tabindex="0" role="button" data-full="screenshot1.png"><img src="screenshot1.png" alt="Main UI"></div>
-          <div class="shot" tabindex="0" role="button" data-full="screenshot2.png"><img src="screenshot2.png" alt="Job details"></div>
-        </div>
-      </section>
-    </main>
-
-    <footer>
-      <div>Made by <a href="https://github.com/Vxtzq" target="_blank" rel="noopener">Vxtzq</a></div>
-      <div class="muted">Open-source · Podman · PyQt6</div>
-    </footer>
-  </div>
-
-  <script>
-    (function(){
-      // lightbox/modal
-      const modal = document.createElement('div');
-      modal.style.position='fixed';
-      modal.style.inset=0;
-      modal.style.display='none';
-      modal.style.alignItems='center';
-      modal.style.justifyContent='center';
-      modal.style.background='rgba(8,12,20,0.72)';
-      modal.style.zIndex=9999;
-      const holder = document.createElement('div');
-      holder.style.maxWidth='94%';
-      holder.style.maxHeight='88%';
-      const img = document.createElement('img');
-      img.style.maxWidth='100%';
-      img.style.maxHeight='100%';
-      img.style.objectFit='contain';
-      holder.appendChild(img);
-      modal.appendChild(holder);
-      document.body.appendChild(modal);
-      modal.addEventListener('click', (e)=>{ if(e.target===modal) close(); });
-      function open(src){ img.src = src; modal.style.display='flex'; document.body.style.overflow='hidden'; }
-      function close(){ modal.style.display='none'; document.body.style.overflow=''; }
-
-      // thumbnails and gallery
-      document.querySelectorAll('.thumb, .shot').forEach(el => {
-        el.addEventListener('click', () => open(el.dataset.full || el.getAttribute('data-full')));
-        el.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') open(el.dataset.full || el.getAttribute('data-full')); });
-      });
-
-      document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') close(); });
-    })();
-
-    (function(){
-      // small carousel prev / next using thumbs scroll
-      const thumbs = document.getElementById('thumbs');
-      if(!thumbs) return;
-      const prev = document.getElementById('prev');
-      const next = document.getElementById('next');
-      prev.addEventListener('click', ()=> { thumbs.scrollBy({left:-460,behavior:'smooth'}) });
-      next.addEventListener('click', ()=> { thumbs.scrollBy({left:460,behavior:'smooth'}) });
-      // keyboard support
-      thumbs.addEventListener('keydown', (e)=> {
-        if(e.key === 'ArrowLeft') thumbs.scrollBy({left:-460,behavior:'smooth'});
-        if(e.key === 'ArrowRight') thumbs.scrollBy({left:460,behavior:'smooth'});
-      });
-    })();
-  </script>
 </body>
 </html>
