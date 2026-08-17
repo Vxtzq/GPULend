@@ -77,14 +77,3 @@ python app.py
 - Ensure Podman is installed and detected.
 
 - Offload computation tasks to available GPUs effortlessly.
-
-
----
-
-## 📝 TODO / Customization
-
-- Add more screenshots or GIF demos.
-- Include configuration or settings section.
-- Add badges for GitHub releases, license, CI/CD.
-- Update macOS support instructions.
-
